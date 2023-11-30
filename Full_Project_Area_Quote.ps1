@@ -325,3 +325,4 @@ $inventoryForm.ActiveControl = $inputControls[$($inventory.Keys[0])].AmountTextB
 
 # Show the form
 $inventoryForm.ShowDialog()
+
