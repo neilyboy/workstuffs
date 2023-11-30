@@ -275,12 +275,14 @@ $calculateButton.Add_Click({
         $pricePerUnit = [double]$inputControls[$item].PriceTextBox.Text
         $isTaxable = $inputControls[$item].Checkbox.Checked
 
+    # Add a condition to check if the amount used is greater than zero
+    if ($amountUsed -gt 0) {
         if ($isTaxable) {
             $totalPrice = $amountUsed * ($pricePerUnit + ($pricePerUnit * ($taxRate / 100)))
         } else {
             $totalPrice = $amountUsed * $pricePerUnit
         }
-        
+
         "----------------------------------" | Out-File -FilePath $outputFilePath -Append
         "$item" | Out-File -FilePath $outputFilePath -Append
         "----------------------------------" | Out-File -FilePath $outputFilePath -Append
@@ -289,6 +291,7 @@ $calculateButton.Add_Click({
         "Taxable: $isTaxable" | Out-File -FilePath $outputFilePath -Append
         "`n" | Out-File -FilePath $outputFilePath -Append
     }
+}
 
     "------------END OF QUOTE------------" | Out-File -FilePath $outputFilePath -Append
     "`n" | Out-File -FilePath $outputFilePath -Append
