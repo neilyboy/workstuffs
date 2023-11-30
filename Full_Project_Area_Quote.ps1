@@ -2,88 +2,65 @@
 $inventory = [ordered]@{
     "Mileage (Per Mile)" = @{
         Price = 1.25
-        Taxable = $false  # Not taxable by default
     }
     "Backhoe Use (Per Hour)" = @{
         Price = 100
-        Taxable = $false  # Not taxable by default
     }
     "Yanmar Use (Per Hour)" = @{
         Price = 50
-        Taxable = $false  # Not taxable by default
     }
     "Boring Rig 24x40 (Per Hour)" = @{
         Price = 150
-        Taxable = $false  # Not taxable by default
     }
     "Fiber Splice Case (Each)" = @{
         Price = 450
-        Taxable = $true  # Taxable by default
     }
     "Vault (Each)" = @{
         Price = 1972
-        Taxable = $true  # Taxable by default
     }
     "2 Fiber (Per Foot)" = @{
         Price = 0.35
-        Taxable = $true  # Taxable by default
     }
     "4 Fiber (Per Foot)" = @{
         Price = 0.33
-        Taxable = $true  # Taxable by default
     }
     "6 Fiber (Per Foot)" = @{
         Price = 0.38
-        Taxable = $true  # Taxable by default
     }
     "12 Fiber (Per Foot)" = @{
         Price = 0.41
-        Taxable = $true  # Taxable by default
     }
     "24 Fiber (Per Foot)" = @{
         Price = 0.43
-        Taxable = $true  # Taxable by default
     }
     "48 Fiber (Per Foot)" = @{
         Price = 0.59
-        Taxable = $true  # Taxable by default
     }
     "72 Fiber (Per Foot)" = @{
         Price = 0.67
-        Taxable = $true  # Taxable by default
     }
     "96 Fiber (Per Foot)" = @{
         Price = 0.75
-        Taxable = $true  # Taxable by default
     }
     "144 Fiber (Per Foot)" = @{
         Price = 1.26
-        Taxable = $true  # Taxable by default
     }
     "16MM (Per Foot)" = @{
         Price = 0.16
-        Taxable = $True  # Taxable by default
     }
     "16MM [With Tracer] (Per Foot)" = @{
         Price = 0.25
-        Taxable = $True  # Taxable by default
     }
     "2-Way Duct (Per Foot)" = @{
         Price = 0.75
-        Taxable = $true  # Taxable by default
     }
     "4-Way Duct (Per Foot)" = @{
         Price = 1.19
-        Taxable = $true  # Taxable by default
     }
     "8-Way Duct (Per Foot)" = @{
         Price = 1.60
-        Taxable = $true  # Taxable by default
     }
 }
-
-# Default tax rate variable
-$taxRate = 8.25
 
 # Load the necessary .NET assemblies
 Add-Type -AssemblyName System.Windows.Forms
@@ -92,7 +69,7 @@ Add-Type -AssemblyName System.Drawing
 # Display GUI for user input
 $inventoryForm = New-Object System.Windows.Forms.Form
 $inventoryForm.Text = "MTCO Fiber Construction Quote Calculator"
-$inventoryForm.Size = New-Object System.Drawing.Size(700, 750)
+$inventoryForm.Size = New-Object System.Drawing.Size(630, 720)
 
 # Create a hashtable to store input controls dynamically
 $inputControls = @{}
@@ -116,75 +93,56 @@ $labelPriceHeader.Text = "Price"
 $labelPriceHeader.AutoSize = $true
 $inventoryForm.Controls.Add($labelPriceHeader)
 
-$labelTaxableHeader = New-Object System.Windows.Forms.Label
-$labelTaxableHeader.Location = New-Object System.Drawing.Point(400, 10)
-$labelTaxableHeader.Text = "Taxable"
-$labelTaxableHeader.AutoSize = $true
-$inventoryForm.Controls.Add($labelTaxableHeader)
-
-# Tax rate label and input field
-$labelTaxRate = New-Object System.Windows.Forms.Label
-$labelTaxRate.Location = New-Object System.Drawing.Point(490, 530)
-$labelTaxRate.Text = "Tax Rate:"
-$labelTaxRate.AutoSize = $true
-$inventoryForm.Controls.Add($labelTaxRate)
-
-$inputTaxRate = New-Object System.Windows.Forms.TextBox
-$inputTaxRate.Location = New-Object System.Drawing.Point(620, 550)
-$inputTaxRate.Size = New-Object System.Drawing.Size(50, 20)
-$inputTaxRate.Text = $taxRate
-$inventoryForm.Controls.Add($inputTaxRate)
-
 # Create controls for output file name and calculate button
 $outputLabel = New-Object System.Windows.Forms.Label
 $outputLabel.Size = New-Object System.Drawing.Size(63, 20)
 $outputLabel.Text = "Job Name:"
 $inventoryForm.Controls.Add($outputLabel)
-$outputLabelLocationX = $inventoryForm.ClientSize.Width - $outputLabel.Width - 130
-$outputLabelLocationY = $inventoryForm.ClientSize.Height - $outputLabel.Height - 95
-$outputLabel.Location = New-Object System.Drawing.Point($outputLabelLocationX, $outputLabelLocationY)
+# $outputLabelLocationX = $inventoryForm.ClientSize.Width - $outputLabel.Width - 130
+# $outputLabelLocationY = $inventoryForm.ClientSize.Height - $outputLabel.Height - 95
+$outputLabel.Location = New-Object System.Drawing.Point(420, 570)
 
 $outputTextBox = New-Object System.Windows.Forms.TextBox
 $outputTextBox.Size = New-Object System.Drawing.Size(180, 20)
 $inventoryForm.Controls.Add($outputTextBox)
-$outputTextBoxLocationX = $inventoryForm.ClientSize.Width - $outputTextBox.Width - 13
-$outputTextBoxLocationY = $inventoryForm.ClientSize.Height - $outputTextBox.Height - 67
-$outputTextBox.Location = New-Object System.Drawing.Point($outputTextBoxLocationX, $outputTextBoxLocationY)
+# $outputTextBoxLocationX = $inventoryForm.ClientSize.Width - $outputTextBox.Width - 13
+# $outputTextBoxLocationY = $inventoryForm.ClientSize.Height - $outputTextBox.Height - 67
+$outputTextBox.Location = New-Object System.Drawing.Point(420, 600)
 
 
 # Create controls for additional input fields
 $labelGuysOnJob = New-Object System.Windows.Forms.Label
-$labelGuysOnJob.Location = New-Object System.Drawing.Point(490, 320)
+$labelGuysOnJob.Location = New-Object System.Drawing.Point(420, 340)
 $labelGuysOnJob.Text = "Guys On Job:"
 $labelGuysOnJob.AutoSize = $true
 $inventoryForm.Controls.Add($labelGuysOnJob)
 
 $inputGuysOnJob = New-Object System.Windows.Forms.TextBox
-$inputGuysOnJob.Location = New-Object System.Drawing.Point(620, 340)
+$inputGuysOnJob.Location = New-Object System.Drawing.Point(550, 340)
 $inputGuysOnJob.Size = New-Object System.Drawing.Size(50, 20)
 $inputGuysOnJob.Text = "5"
 $inventoryForm.Controls.Add($inputGuysOnJob)
 
 $labelHourlyRate = New-Object System.Windows.Forms.Label
-$labelHourlyRate.Location = New-Object System.Drawing.Point(490, 390)
+$labelHourlyRate.Location = New-Object System.Drawing.Point(420, 410)
 $labelHourlyRate.Text = "Hourly Rate:"
 $labelHourlyRate.AutoSize = $true
 $inventoryForm.Controls.Add($labelHourlyRate)
 
 $inputHourlyRate = New-Object System.Windows.Forms.TextBox
-$inputHourlyRate.Location = New-Object System.Drawing.Point(620, 410)
+$inputHourlyRate.Location = New-Object System.Drawing.Point(550, 410)
 $inputHourlyRate.Size = New-Object System.Drawing.Size(50, 20)
 $inputHourlyRate.Text = "100"
 $inventoryForm.Controls.Add($inputHourlyRate)
 
 $labelFeetPerDay = New-Object System.Windows.Forms.Label
-$labelFeetPerDay.Location = New-Object System.Drawing.Point(490, 460)
+$labelFeetPerDay.Location = New-Object System.Drawing.Point(420, 480)
 $labelFeetPerDay.Text = "Feet Per Day:"
 $labelFeetPerDay.AutoSize = $true
 $inventoryForm.Controls.Add($labelFeetPerDay)
 
 $inputFeetPerDay = New-Object System.Windows.Forms.TextBox
-$inputFeetPerDay.Location = New-Object System.Drawing.Point(620, 480)
+$inputFeetPerDay.Location = New-Object System.Drawing.Point(550, 480)
 $inputFeetPerDay.Size = New-Object System.Drawing.Size(50, 20)
 $inputFeetPerDay.Text = "600"
 $inventoryForm.Controls.Add($inputFeetPerDay)
@@ -211,21 +169,9 @@ foreach ($item in $inventory.Keys) {
     $priceTextBox.Text = $inventory[$item].Price.ToString('F2')
     $inventoryForm.Controls.Add($priceTextBox)
 
-    # Use default taxable status if available, otherwise set to false
-    $isTaxable = $inventory[$item].Taxable -as [bool]
-    if ($null -eq $isTaxable) { $isTaxable = $false }
-
-    $checkbox = New-Object System.Windows.Forms.CheckBox
-    $checkbox.Location = New-Object System.Drawing.Point(400, $top)
-    $checkbox.Text = "Taxable"
-    $checkbox.Size = New-Object System.Drawing.Size(70, 20)
-    $checkbox.Checked = $isTaxable
-    $inventoryForm.Controls.Add($checkbox)
-
     $inputControls[$item] = @{
         AmountTextBox = $amountTextBox
         PriceTextBox = $priceTextBox
-        Checkbox = $checkbox
     }
 
     $top += 30
@@ -236,22 +182,22 @@ foreach ($item in $inventory.Keys) {
 
 $border = New-Object System.Windows.Forms.Label
 $border.Location = New-Object System.Drawing.Point(5, 18)
-$border.Size = New-Object System.Drawing.Size(467, 640)
+$border.Size = New-Object System.Drawing.Size(400, 615)
 $border.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 $inventoryForm.Controls.Add($border)
 
 # Add a border around the entire group of inventory items
 
-$border2 = New-Object System.Windows.Forms.Label
-$border2.Location = New-Object System.Drawing.Point(480, 538)
-$border2.Size = New-Object System.Drawing.Size(200, 45)
-$border2.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
-$inventoryForm.Controls.Add($border2)
+#$border2 = New-Object System.Windows.Forms.Label
+#$border2.Location = New-Object System.Drawing.Point(410, 538)
+#$border2.Size = New-Object System.Drawing.Size(200, 45)
+#$border2.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+#$inventoryForm.Controls.Add($border2)
 
 # Add a border around the entire group of inventory items
 
 $border3 = New-Object System.Windows.Forms.Label
-$border3.Location = New-Object System.Drawing.Point(480, 605)
+$border3.Location = New-Object System.Drawing.Point(410, 580)
 $border3.Size = New-Object System.Drawing.Size(200, 53)
 $border3.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 $inventoryForm.Controls.Add($border3)
@@ -259,7 +205,7 @@ $inventoryForm.Controls.Add($border3)
 # Add a border around the entire group of inventory items
 
 $border4 = New-Object System.Windows.Forms.Label
-$border4.Location = New-Object System.Drawing.Point(480, 330)
+$border4.Location = New-Object System.Drawing.Point(410, 330)
 $border4.Size = New-Object System.Drawing.Size(200, 45)
 $border4.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 $inventoryForm.Controls.Add($border4)
@@ -267,7 +213,7 @@ $inventoryForm.Controls.Add($border4)
 # Add a border around the entire group of inventory items
 
 $border5 = New-Object System.Windows.Forms.Label
-$border5.Location = New-Object System.Drawing.Point(480, 400)
+$border5.Location = New-Object System.Drawing.Point(410, 400)
 $border5.Size = New-Object System.Drawing.Size(200, 45)
 $border5.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 $inventoryForm.Controls.Add($border5)
@@ -275,7 +221,7 @@ $inventoryForm.Controls.Add($border5)
 # Add a border around the entire group of inventory items
 
 $border6 = New-Object System.Windows.Forms.Label
-$border6.Location = New-Object System.Drawing.Point(480, 470)
+$border6.Location = New-Object System.Drawing.Point(410, 470)
 $border6.Size = New-Object System.Drawing.Size(200, 45)
 $border6.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 $inventoryForm.Controls.Add($border6)
@@ -294,27 +240,17 @@ $calculateButton.Add_Click({
 
     $outputFilePath = Join-Path -Path $PSScriptRoot -ChildPath $outputFileName
 
-    # Update tax rate based on user input
-    $taxRate = [double]$inputTaxRate.Text
-
     # Calculate subtotal, total sales tax, and total cost
     $subtotal = 0
-    $totalSalesTax = 0
 
     foreach ($item in $inputControls.Keys) {
         $amountUsed = [double]$inputControls[$item].AmountTextBox.Text
         $pricePerUnit = [double]$inputControls[$item].PriceTextBox.Text
-        $isTaxable = $inputControls[$item].Checkbox.Checked
 
         $subtotal += $amountUsed * $pricePerUnit
-
-        if ($isTaxable) {
-            $totalSalesTax += $amountUsed * $pricePerUnit
-        }
     }
 
-    $totalSalesTax *= ($taxRate / 100)
-    $totalCost = $subtotal + $totalSalesTax
+    $totalCost = $subtotal
 
     # Additional functionality: Calculate totalDuctLength
     $totalDuctLength = 0
@@ -332,15 +268,14 @@ $calculateButton.Add_Click({
 
     # Update subtotal, total sales tax, and total cost
     $subtotal += $laborTotal
-    $totalCost = $subtotal + $totalSalesTax + $laborTotal
+    $totalCost = $subtotal + $laborTotal
 
     "||| MTCO Fiber Project Quote For $($outputTextBox.Text) |||" | Out-File -FilePath $outputFilePath
     "`n" | Out-File -FilePath $outputFilePath -Append
     "Financial Costs For Job" | Out-File -FilePath $outputFilePath -Append
     "===================================" | Out-File -FilePath $outputFilePath -Append
     "| Subtotal: $($subtotal.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
-    "| Total Sales Tax (@ $taxRate%): $($totalSalesTax.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
-    "| Total Labor Cost: $($laborTotal.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append  # Added line for labor total
+    "| Total Labor Cost: $($laborTotal.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
     "| Total Cost (including tax and labor): $($totalCost.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
     "===================================" | Out-File -FilePath $outputFilePath -Append
     "`n" | Out-File -FilePath $outputFilePath -Append
@@ -358,22 +293,15 @@ $calculateButton.Add_Click({
     foreach ($item in $inputControls.Keys) {
         $amountUsed = [double]$inputControls[$item].AmountTextBox.Text
         $pricePerUnit = [double]$inputControls[$item].PriceTextBox.Text
-        $isTaxable = $inputControls[$item].Checkbox.Checked
 
         # Add a condition to check if the amount used is greater than zero
         if ($amountUsed -gt 0) {
-            if ($isTaxable) {
-                $totalPrice = $amountUsed * ($pricePerUnit + ($pricePerUnit * ($taxRate / 100)))
-            } else {
-                $totalPrice = $amountUsed * $pricePerUnit
-            }
-
+            $totalPrice = $amountUsed * $pricePerUnit
             "----------------------------------" | Out-File -FilePath $outputFilePath -Append
             "$item" | Out-File -FilePath $outputFilePath -Append
             "----------------------------------" | Out-File -FilePath $outputFilePath -Append
             "Total Price: $($totalPrice.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
             "Amount Used: $amountUsed, Price Per Unit: $($pricePerUnit.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
-            "Taxable: $isTaxable" | Out-File -FilePath $outputFilePath -Append
             "`n" | Out-File -FilePath $outputFilePath -Append
         }
     }
