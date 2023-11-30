@@ -197,11 +197,8 @@ foreach ($item in $inventory.Keys) {
 
 }
 
-
-
-
 # Add a border around the entire group of inventory items
-$borderRect = New-Object System.Drawing.Rectangle(5, 30, 350, 10)
+
 $border = New-Object System.Windows.Forms.Label
 $border.Location = New-Object System.Drawing.Point(5, 18)
 $border.Size = New-Object System.Drawing.Size(467, 640)
@@ -209,7 +206,7 @@ $border.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 $inventoryForm.Controls.Add($border)
 
 # Add a border around the entire group of inventory items
-$borderRect2 = New-Object System.Drawing.Rectangle(5, 30, 350, 10)
+
 $border2 = New-Object System.Windows.Forms.Label
 $border2.Location = New-Object System.Drawing.Point(480, 538)
 $border2.Size = New-Object System.Drawing.Size(200, 45)
@@ -217,7 +214,7 @@ $border2.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 $inventoryForm.Controls.Add($border2)
 
 # Add a border around the entire group of inventory items
-$borderRect3 = New-Object System.Drawing.Rectangle(5, 30, 350, 10)
+
 $border3 = New-Object System.Windows.Forms.Label
 $border3.Location = New-Object System.Drawing.Point(480, 605)
 $border3.Size = New-Object System.Drawing.Size(200, 53)
