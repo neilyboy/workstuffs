@@ -128,7 +128,7 @@ $inventoryForm.Controls.Add($labelTaxableHeader)
 
 # Tax rate label and input field
 $labelTaxRate = New-Object System.Windows.Forms.Label
-$labelTaxRate.Location = New-Object System.Drawing.Point(620, 530)
+$labelTaxRate.Location = New-Object System.Drawing.Point(490, 530)
 $labelTaxRate.Text = "Tax Rate:"
 $labelTaxRate.AutoSize = $true
 $inventoryForm.Controls.Add($labelTaxRate)
@@ -138,6 +138,22 @@ $inputTaxRate.Location = New-Object System.Drawing.Point(620, 550)
 $inputTaxRate.Size = New-Object System.Drawing.Size(50, 20)
 $inputTaxRate.Text = $taxRate
 $inventoryForm.Controls.Add($inputTaxRate)
+
+# Create controls for output file name and calculate button
+$outputLabel = New-Object System.Windows.Forms.Label
+$outputLabel.Size = New-Object System.Drawing.Size(63, 20)
+$outputLabel.Text = "Job Name:"
+$inventoryForm.Controls.Add($outputLabel)
+$outputLabelLocationX = $inventoryForm.ClientSize.Width - $outputLabel.Width - 130
+$outputLabelLocationY = $inventoryForm.ClientSize.Height - $outputLabel.Height - 95
+$outputLabel.Location = New-Object System.Drawing.Point($outputLabelLocationX, $outputLabelLocationY)
+
+$outputTextBox = New-Object System.Windows.Forms.TextBox
+$outputTextBox.Size = New-Object System.Drawing.Size(150, 20)
+$inventoryForm.Controls.Add($outputTextBox)
+$outputTextBoxLocationX = $inventoryForm.ClientSize.Width - $outputTextBox.Width - 10
+$outputTextBoxLocationY = $inventoryForm.ClientSize.Height - $outputTextBox.Height - 70
+$outputTextBox.Location = New-Object System.Drawing.Point($outputTextBoxLocationX, $outputTextBoxLocationY)
 
 # Create controls for each inventory item
 $top = 32
@@ -167,6 +183,7 @@ foreach ($item in $inventory.Keys) {
     $checkbox = New-Object System.Windows.Forms.CheckBox
     $checkbox.Location = New-Object System.Drawing.Point(400, $top)
     $checkbox.Text = "Taxable"
+    $checkbox.Size = New-Object System.Drawing.Size(70, 20)
     $checkbox.Checked = $isTaxable
     $inventoryForm.Controls.Add($checkbox)
 
@@ -177,19 +194,40 @@ foreach ($item in $inventory.Keys) {
     }
 
     $top += 30
+
 }
 
-# Create controls for output file name and calculate button
-$outputLabel = New-Object System.Windows.Forms.Label
-$outputLabel.Size = New-Object System.Drawing.Size(150, 20)
-$outputLabel.Text = "Job Name"
 
-$outputTextBox = New-Object System.Windows.Forms.TextBox
-$outputTextBox.Size = New-Object System.Drawing.Size(150, 20)
+
+
+# Add a border around the entire group of inventory items
+$borderRect = New-Object System.Drawing.Rectangle(5, 30, 350, 10)
+$border = New-Object System.Windows.Forms.Label
+$border.Location = New-Object System.Drawing.Point(5, 18)
+$border.Size = New-Object System.Drawing.Size(467, 640)
+$border.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+$inventoryForm.Controls.Add($border)
+
+# Add a border around the entire group of inventory items
+$borderRect2 = New-Object System.Drawing.Rectangle(5, 30, 350, 10)
+$border2 = New-Object System.Windows.Forms.Label
+$border2.Location = New-Object System.Drawing.Point(480, 538)
+$border2.Size = New-Object System.Drawing.Size(200, 45)
+$border2.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+$inventoryForm.Controls.Add($border2)
+
+# Add a border around the entire group of inventory items
+$borderRect3 = New-Object System.Drawing.Rectangle(5, 30, 350, 10)
+$border3 = New-Object System.Windows.Forms.Label
+$border3.Location = New-Object System.Drawing.Point(480, 605)
+$border3.Size = New-Object System.Drawing.Size(200, 53)
+$border3.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+$inventoryForm.Controls.Add($border3)
+
 
 $calculateButton = New-Object System.Windows.Forms.Button
 $calculateButton.Size = New-Object System.Drawing.Size(150, 30)
-$calculateButton.Text = "Calculate"
+$calculateButton.Text = "Quote Job"
 $calculateButton.Add_Click({
     $outputFileName = "$($outputTextBox.Text).txt"  # Append ".txt" to the file name
     if (-not $outputFileName) {
@@ -263,15 +301,9 @@ $calculateButtonLocationX = $inventoryForm.ClientSize.Width - $calculateButton.W
 $calculateButtonLocationY = $inventoryForm.ClientSize.Height - $calculateButton.Height - 10
 $calculateButton.Location = New-Object System.Drawing.Point($calculateButtonLocationX, $calculateButtonLocationY)
 
-$inventoryForm.Controls.Add($outputTextBox)
-$outputTextBoxLocationX = $inventoryForm.ClientSize.Width - $outputTextBox.Width - 10
-$outputTextBoxLocationY = $inventoryForm.ClientSize.Height - $outputTextBox.Height - 50
-$outputTextBox.Location = New-Object System.Drawing.Point($outputTextBoxLocationX, $outputTextBoxLocationY)
 
-$inventoryForm.Controls.Add($outputLabel)
-$outputLabelLocationX = $inventoryForm.ClientSize.Width - $outputLabel.Width - -80
-$outputLabelLocationY = $inventoryForm.ClientSize.Height - $outputLabel.Height - 70
-$outputLabel.Location = New-Object System.Drawing.Point($outputLabelLocationX, $outputLabelLocationY)
+
+
 
 $inventoryForm.ActiveControl = $inputControls[$($inventory.Keys[0])].AmountTextBox
 
