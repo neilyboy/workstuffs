@@ -154,37 +154,37 @@ $outputTextBox.Location = New-Object System.Drawing.Point($outputTextBoxLocation
 
 # Create controls for additional input fields
 $labelGuysOnJob = New-Object System.Windows.Forms.Label
-$labelGuysOnJob.Location = New-Object System.Drawing.Point(490, 100)
+$labelGuysOnJob.Location = New-Object System.Drawing.Point(490, 320)
 $labelGuysOnJob.Text = "Guys On Job:"
 $labelGuysOnJob.AutoSize = $true
 $inventoryForm.Controls.Add($labelGuysOnJob)
 
 $inputGuysOnJob = New-Object System.Windows.Forms.TextBox
-$inputGuysOnJob.Location = New-Object System.Drawing.Point(620, 150)
+$inputGuysOnJob.Location = New-Object System.Drawing.Point(620, 340)
 $inputGuysOnJob.Size = New-Object System.Drawing.Size(50, 20)
 $inputGuysOnJob.Text = "5"
 $inventoryForm.Controls.Add($inputGuysOnJob)
 
 $labelHourlyRate = New-Object System.Windows.Forms.Label
-$labelHourlyRate.Location = New-Object System.Drawing.Point(490, 200)
+$labelHourlyRate.Location = New-Object System.Drawing.Point(490, 390)
 $labelHourlyRate.Text = "Hourly Rate:"
 $labelHourlyRate.AutoSize = $true
 $inventoryForm.Controls.Add($labelHourlyRate)
 
 $inputHourlyRate = New-Object System.Windows.Forms.TextBox
-$inputHourlyRate.Location = New-Object System.Drawing.Point(620, 250)
+$inputHourlyRate.Location = New-Object System.Drawing.Point(620, 410)
 $inputHourlyRate.Size = New-Object System.Drawing.Size(50, 20)
 $inputHourlyRate.Text = "100"
 $inventoryForm.Controls.Add($inputHourlyRate)
 
 $labelFeetPerDay = New-Object System.Windows.Forms.Label
-$labelFeetPerDay.Location = New-Object System.Drawing.Point(490, 300)
+$labelFeetPerDay.Location = New-Object System.Drawing.Point(490, 460)
 $labelFeetPerDay.Text = "Feet Per Day:"
 $labelFeetPerDay.AutoSize = $true
 $inventoryForm.Controls.Add($labelFeetPerDay)
 
 $inputFeetPerDay = New-Object System.Windows.Forms.TextBox
-$inputFeetPerDay.Location = New-Object System.Drawing.Point(620, 350)
+$inputFeetPerDay.Location = New-Object System.Drawing.Point(620, 480)
 $inputFeetPerDay.Size = New-Object System.Drawing.Size(50, 20)
 $inputFeetPerDay.Text = "600"
 $inventoryForm.Controls.Add($inputFeetPerDay)
@@ -256,6 +256,32 @@ $border3.Size = New-Object System.Drawing.Size(200, 53)
 $border3.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 $inventoryForm.Controls.Add($border3)
 
+# Add a border around the entire group of inventory items
+
+$border4 = New-Object System.Windows.Forms.Label
+$border4.Location = New-Object System.Drawing.Point(480, 330)
+$border4.Size = New-Object System.Drawing.Size(200, 45)
+$border4.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+$inventoryForm.Controls.Add($border4)
+
+# Add a border around the entire group of inventory items
+
+$border5 = New-Object System.Windows.Forms.Label
+$border5.Location = New-Object System.Drawing.Point(480, 400)
+$border5.Size = New-Object System.Drawing.Size(200, 45)
+$border5.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+$inventoryForm.Controls.Add($border5)
+
+# Add a border around the entire group of inventory items
+
+$border6 = New-Object System.Windows.Forms.Label
+$border6.Location = New-Object System.Drawing.Point(480, 470)
+$border6.Size = New-Object System.Drawing.Size(200, 45)
+$border6.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+$inventoryForm.Controls.Add($border6)
+
+
+
 
 $calculateButton = New-Object System.Windows.Forms.Button
 $calculateButton.Size = New-Object System.Drawing.Size(150, 30)
@@ -308,13 +334,20 @@ $calculateButton.Add_Click({
     $subtotal += $laborTotal
     $totalCost = $subtotal + $totalSalesTax + $laborTotal
 
-    "MTCO Fiber Project Quote For $($outputTextBox.Text)" | Out-File -FilePath $outputFilePath
+    "||| MTCO Fiber Project Quote For $($outputTextBox.Text) |||" | Out-File -FilePath $outputFilePath
+    "`n" | Out-File -FilePath $outputFilePath -Append
+    "Financial Costs For Job" | Out-File -FilePath $outputFilePath -Append
     "===================================" | Out-File -FilePath $outputFilePath -Append
     "| Subtotal: $($subtotal.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
     "| Total Sales Tax (@ $taxRate%): $($totalSalesTax.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
     "| Total Labor Cost: $($laborTotal.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append  # Added line for labor total
     "| Total Cost (including tax and labor): $($totalCost.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
-    "| Total Duct Footage: $totalDuctLength Feet" | Out-File -FilePath $outputFilePath -Append
+    "===================================" | Out-File -FilePath $outputFilePath -Append
+    "`n" | Out-File -FilePath $outputFilePath -Append
+    "Project Details" | Out-File -FilePath $outputFilePath -Append
+    "===================================" | Out-File -FilePath $outputFilePath -Append
+    "| Total Duct Footage: $totalDuctLength'" | Out-File -FilePath $outputFilePath -Append
+    "| Total Days To Complete: $totalWorkDays" | Out-File -FilePath $outputFilePath -Append
     "===================================" | Out-File -FilePath $outputFilePath -Append
     "`n" | Out-File -FilePath $outputFilePath -Append
     "--------------------------------------" | Out-File -FilePath $outputFilePath -Append
