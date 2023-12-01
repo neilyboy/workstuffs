@@ -124,6 +124,32 @@ $inventoryForm.Controls.Add($labelPriceHeader)
 
 # Create controls for output file name and calculate button
 
+
+$labelHousesPassed = New-Object System.Windows.Forms.Label
+$labelHousesPassed.Location = New-Object System.Drawing.Point(420, 215)
+$labelHousesPassed.Text = "Total Houses Passed"
+$labelHousesPassed.AutoSize = $true
+$inventoryForm.Controls.Add($labelHousesPassed)
+
+$inputHousesPassed = New-Object System.Windows.Forms.TextBox
+$inputHousesPassed.Location = New-Object System.Drawing.Point(550, 215)
+$inputHousesPassed.Size = New-Object System.Drawing.Size(50, 20)
+$inputHousesPassed.Text = "0"
+$inventoryForm.Controls.Add($inputHousesPassed)
+
+
+$labelHousesCurrent = New-Object System.Windows.Forms.Label
+$labelHousesCurrent.Location = New-Object System.Drawing.Point(420, 245)
+$labelHousesCurrent.Text = "Current Customers"
+$labelHousesCurrent.AutoSize = $true
+$inventoryForm.Controls.Add($labelHousesCurrent)
+
+$inputHousesCurrent = New-Object System.Windows.Forms.TextBox
+$inputHousesCurrent.Location = New-Object System.Drawing.Point(550, 245)
+$inputHousesCurrent.Size = New-Object System.Drawing.Size(50, 20)
+$inputHousesCurrent.Text = "0"
+$inventoryForm.Controls.Add($inputHousesCurrent)
+
 $labelMileageFee = New-Object System.Windows.Forms.Label
 $labelMileageFee.Location = New-Object System.Drawing.Point(460, 315)
 $labelMileageFee.Text = "Mileage Fee"
@@ -196,17 +222,7 @@ $inputFeetPerDay.Size = New-Object System.Drawing.Size(50, 20)
 $inputFeetPerDay.Text = "600"
 $inventoryForm.Controls.Add($inputFeetPerDay)
 
-$labelHousesPassed = New-Object System.Windows.Forms.Label
-$labelHousesPassed.Location = New-Object System.Drawing.Point(420, 520)
-$labelHousesPassed.Text = "Total Houses Passed"
-$labelHousesPassed.AutoSize = $true
-$inventoryForm.Controls.Add($labelHousesPassed)
 
-$inputHousesPassed = New-Object System.Windows.Forms.TextBox
-$inputHousesPassed.Location = New-Object System.Drawing.Point(550, 520)
-$inputHousesPassed.Size = New-Object System.Drawing.Size(50, 20)
-$inputHousesPassed.Text = "0"
-$inventoryForm.Controls.Add($inputHousesPassed)
 
 $outputLabel = New-Object System.Windows.Forms.Label
 $outputLabel.Size = New-Object System.Drawing.Size(60, 20)
@@ -236,6 +252,20 @@ $labelJobInfo.Location = New-Object System.Drawing.Point(420, 290)
 $labelJobInfo.Text = "Job Info"
 $labelJobInfo.AutoSize = $true
 $inventoryForm.Controls.Add($labelJobInfo)
+
+$labelHomeInfo = New-Object System.Windows.Forms.Label
+$labelHomeInfo.Location = New-Object System.Drawing.Point(420, 190)
+$labelHomeInfo.Text = "Home Info"
+$labelHomeInfo.AutoSize = $true
+$inventoryForm.Controls.Add($labelHomeInfo)
+
+
+
+$labelDumbQuote = New-Object System.Windows.Forms.Label
+$labelDumbQuote.Location = New-Object System.Drawing.Point(30, 647)
+$labelDumbQuote.Text = "Fiber Optics: Finally, Fast Enough To Procrastinate Effectively."
+$labelDumbQuote.AutoSize = $true
+$inventoryForm.Controls.Add($labelDumbQuote)
 
 
 
@@ -293,10 +323,17 @@ $border3.Size = New-Object System.Drawing.Size(200, 53)
 $border3.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
 $inventoryForm.Controls.Add($border3)
 
+# Add a border around Home Info
+$border4 = New-Object System.Windows.Forms.Label
+$border4.Location = New-Object System.Drawing.Point(410, 200)
+$border4.Size = New-Object System.Drawing.Size(200, 80)
+$border4.BorderStyle = [System.Windows.Forms.BorderStyle]::FixedSingle
+$inventoryForm.Controls.Add($border4)
+
 
 
 $calculateButton.Add_Click({
-    $outputFileName = "$($outputTextBox.Text)-Quote.txt"  # Append ".txt" to the file name
+    $outputFileName = "$($outputTextBox.Text) Estimate.txt"  # Append ".txt" to the file name
     if (-not $outputFileName) {
         $outputFileName = (Get-Date).ToString("yyyyMMdd_HHmmss") + ".txt"
     }
@@ -338,13 +375,17 @@ $calculateButton.Add_Click({
     $totalMilesForJob = $roundTripMilesPerday * $totalWorkDays
     $mileageFeeForJob = $totalMilesForJob * $mileageFee
 
+    # Calculate costPerHouse
+    $totalHousesPassed = [double]$inputHousesPassed.Text
+
+    #Current Home Stuff
+    $currentHomes = $inputHousesCurrent.Text
+    $takeRate = ($currentHomes / $totalHousesPassed)
+    $takeRateFormatted = "{0:P2}" -f $takeRate
 
     # Update subtotal, total sales tax, and total cost
     $subtotal += $laborTotal
     $totalCost = $subtotal + $laborTotal + $mileageFeeForJob
-
-    # Calculate costPerHouse
-    $totalHousesPassed = [double]$inputHousesPassed.Text
 
     #my varaibles
     $mileageFee = $inputMileageFee.Text
@@ -354,38 +395,66 @@ $calculateButton.Add_Click({
     $roundTripMilesPerDay = ($milesToJob * 2)
     $totalMilesForJob = $roundTripMilesPerday * $totalWorkDays
     $mileageFeeForJob = $totalMilesForJob * $mileageFee
+    $costPerHouse = $totalCost / $totalHousesPassed
 
+    $costPerCurrentCustOnly = $totalCost / $currentHomes
+
+    $totalDuctLengthOutput = "{0:N0}" -f $totalDuctLength
+
+
+    #Calculations to figure ROI
+    $avgMonthlyPayment = 105
+    $monthsToRecoverCurrent = [Math]::Ceiling($costPerCurrentCustOnly / $avgMonthlyPayment)
+    $yearsToRecoverCurrent = ($monthsToRecoverCurrent / 12).ToString("#.##")
+
+    $monthsToRecoverAll = [Math]::Ceiling($costPerHouse / $avgMonthlyPayment)
+    $yearsToRecoverAll = ($monthsToRecoverAll / 12).ToString("#.##")
+
+
+    #Centering Math
+    $jobNameText = $outputTextBox.Text
+    $padding = ([Math]::Floor((60 - $jobNameText.Length) / 2))
+    $jobNameCentered = $jobNameText.PadLeft($padding + $jobNameText.Length)
 
 
     if ($totalHousesPassed -eq 0) {
-        [System.Windows.Forms.MessageBox]::Show("Total Houses Passed cannot be zero.", "Error")
+        [System.Windows.Forms.MessageBox]::Show("Total Houses Passed cannot be zero DUMBASS.", "Error")
         return
     }
-    $costPerHouse = $totalCost / $totalHousesPassed
 
-
-    "||| MTCO Fiber Project Quote For $($outputTextBox.Text) |||" | Out-File -FilePath $outputFilePath
+    "|==========================================================|" | Out-File -FilePath $outputFilePath
+    "|                     MTCO digiPRICE                       |" | Out-File -FilePath $outputFilePath -Append
+    "|==========================================================|" | Out-File -FilePath $outputFilePath -Append
+    $jobNameCentered | Out-File -FilePath $outputFilePath -Append
+    "|==========================================================|" | Out-File -FilePath $outputFilePath -Append
     "`n" | Out-File -FilePath $outputFilePath -Append
+    "Financial Costs Associated With The $($outputTextBox.Text) Project" | Out-File -FilePath $outputFilePath -Append
+    "==========================================================" | Out-File -FilePath $outputFilePath -Append
+    "Subtotal: $($subtotal.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
+    "Labor Cost: $($laborTotal.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
+    "Mileage Cost: $($mileageFeeForJob.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
+    "Total Cost (Subtotal, Labor & Mileage): $($totalCost.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
+    "==========================================================" | Out-File -FilePath $outputFilePath -Append
     "`n" | Out-File -FilePath $outputFilePath -Append
-    "Financial Costs For Job" | Out-File -FilePath $outputFilePath -Append
-    "===================================" | Out-File -FilePath $outputFilePath -Append
-    "| Subtotal: $($subtotal.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
-    "| Total Labor Cost: $($laborTotal.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
-    "| Total Mileage Cost: $($mileageFeeForJob.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
-    "| Total Cost (including labor, mileage): $($totalCost.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
-    "===================================" | Out-File -FilePath $outputFilePath -Append
+    "$($outputTextBox.Text) Project Details" | Out-File -FilePath $outputFilePath -Append
+    "==========================================================" | Out-File -FilePath $outputFilePath -Append
+    "This project is estimated to take $totalWorkDays work days to complete." | Out-File -FilePath $outputFilePath -Append
+    "We will use a total of $totalDuctLengthOutput Feet of duct." | Out-File -FilePath $outputFilePath -Append
+    "We wil drive around $totalMilesForJob miles between $numberOfTrucks vehicles." | Out-File -FilePath $outputFilePath -Append
     "`n" | Out-File -FilePath $outputFilePath -Append
-    "Project Details" | Out-File -FilePath $outputFilePath -Append
-    "===================================" | Out-File -FilePath $outputFilePath -Append
-    "| Total Duct Footage: $totalDuctLength'" | Out-File -FilePath $outputFilePath -Append
-    "| Total Days To Complete: $totalWorkDays" | Out-File -FilePath $outputFilePath -Append
-    "| Potential Houses Passed: $totalHousesPassed" | Out-File -FilePath $outputFilePath -Append
-    "| Construction Cost Per House Passed: $($costPerHouse.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
-    "===================================" | Out-File -FilePath $outputFilePath -Append
+    "Home Passed - Take Rate Detail" | Out-File -FilePath $outputFilePath -Append
+    "==========================================================" | Out-File -FilePath $outputFilePath -Append
+    "We will pass $totalHousesPassed potential homes in this project area." | Out-File -FilePath $outputFilePath -Append
+    "Of these homes $currentHomes are current customers. Which is a $takeRateFormatted take rate." | Out-File -FilePath $outputFilePath -Append
     "`n" | Out-File -FilePath $outputFilePath -Append
-    "--------------------------------------" | Out-File -FilePath $outputFilePath -Append
-    "| Price Breakdown (Individual Items) |" | Out-File -FilePath $outputFilePath -Append
-    "--------------------------------------" | Out-File -FilePath $outputFilePath -Append
+    "Return On Investment" | Out-File -FilePath $outputFilePath -Append
+    "==========================================================" | Out-File -FilePath $outputFilePath -Append    
+    "On average each home we pass if everyone takes service would cost $($costPerHouse.ToString('C2')) in construction fees." | Out-File -FilePath $outputFilePath -Append
+    "If only current customers take service each home would cost $($costPerCurrentCustOnly.ToString('C2')) in construction fees." | Out-File -FilePath $outputFilePath -Append
+    "If only current customers take service it would take us $monthsToRecoverCurrent months ($yearsToRecoverCurrent years) to recover our costs." | Out-File -FilePath $outputFilePath -Append
+    "With 100% take rate it would take us $monthsToRecoverAll months ($yearsToRecoverAll years) to recover our costs." | Out-File -FilePath $outputFilePath -Append
+    "`n" | Out-File -FilePath $outputFilePath -Append
+    "Price Breakdown (Individual Items)" | Out-File -FilePath $outputFilePath -Append
 
     # Iterate through input controls and calculate totals
     foreach ($item in $inputControls.Keys) {
@@ -404,15 +473,11 @@ $calculateButton.Add_Click({
         }
     }
 
-    "------------END OF QUOTE------------" | Out-File -FilePath $outputFilePath -Append
+    "------------END OF $($outputTextBox.Text) Estimate------------" | Out-File -FilePath $outputFilePath -Append
     "`n" | Out-File -FilePath $outputFilePath -Append
 
     [System.Windows.Forms.MessageBox]::Show("Calculation complete. Output saved to: $outputFilePath", "Success")
 })
-
-
-
-
 
 
 
