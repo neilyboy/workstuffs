@@ -66,6 +66,7 @@ $inventory = [ordered]@{
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
+
 # Display GUI for user input
 $inventoryForm = New-Object System.Windows.Forms.Form
 $inventoryForm.Text = "MTCO Fiber Construction Quote Calculator"
@@ -222,6 +223,28 @@ $inputFeetPerDay.Size = New-Object System.Drawing.Size(50, 20)
 $inputFeetPerDay.Text = "600"
 $inventoryForm.Controls.Add($inputFeetPerDay)
 
+$labelNotes = New-Object System.Windows.Forms.Label
+$labelNotes.Location = New-Object System.Drawing.Point(420, 537)
+$labelNotes.Text = "(Housing, ONT, Jumper)"
+$labelNotes.AutoSize = $true
+$inventoryForm.Controls.Add($labelNotes)
+
+
+
+
+$labelAvgONTCost = New-Object System.Windows.Forms.Label
+$labelAvgONTCost.Location = New-Object System.Drawing.Point(430, 520)
+$labelAvgONTCost.Text = "Average ONT Cost"
+$labelAvgONTCost.AutoSize = $true
+$inventoryForm.Controls.Add($labelAvgONTCost)
+
+$inputAvgONTCost = New-Object System.Windows.Forms.TextBox
+$inputAvgONTCost.Location = New-Object System.Drawing.Point(550, 520)
+$inputAvgONTCost.Size = New-Object System.Drawing.Size(50, 20)
+$inputAvgONTCost.Text = "170"
+$inventoryForm.Controls.Add($inputAvgONTCost)
+
+
 
 
 $outputLabel = New-Object System.Windows.Forms.Label
@@ -263,7 +286,7 @@ $inventoryForm.Controls.Add($labelHomeInfo)
 
 $labelDumbQuote = New-Object System.Windows.Forms.Label
 $labelDumbQuote.Location = New-Object System.Drawing.Point(30, 647)
-$labelDumbQuote.Text = "Fiber Optics: Finally, Fast Enough To Procrastinate Effectively."
+$labelDumbQuote.Text = "Fiber Optics: Finally, Fast Enough To Procrastinate Efficiently."
 $labelDumbQuote.AutoSize = $true
 $inventoryForm.Controls.Add($labelDumbQuote)
 
@@ -365,6 +388,9 @@ $calculateButton.Add_Click({
     $totalHoursWorked = $totalWorkDays * 8 * $guysOnJob  # Assuming 8 hours per day per guy
     $hourlyRate = [double]$inputHourlyRate.Text
     $laborTotal = $totalHoursWorked * $hourlyRate
+    $ontCost = [double]$inputAvgONTCost.Text
+
+
 
     #my varaibles
     $mileageFee = $inputMileageFee.Text
@@ -401,6 +427,8 @@ $calculateButton.Add_Click({
 
     $totalDuctLengthOutput = "{0:N0}" -f $totalDuctLength
 
+    $costONTCustomers = $ontCost * $currentHomes
+    $grandTotal = $totalCost + $costONTCustomers
 
     #Calculations to figure ROI
     $avgMonthlyPayment = 105
@@ -434,6 +462,11 @@ $calculateButton.Add_Click({
     "Labor Cost: $($laborTotal.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
     "Mileage Cost: $($mileageFeeForJob.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
     "Total Cost (Subtotal, Labor & Mileage): $($totalCost.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
+    "----------------------------------------------------------" | Out-File -FilePath $outputFilePath -Append
+    "If you were to include the needed ONT hardware for current customers" | Out-File -FilePath $outputFilePath -Append
+    "(Enclosure, Slack-Tray, Jumper and Electronics)" | Out-File -FilePath $outputFilePath -Append
+    "With $currentHomes current customers it would cost an additional $($costONTCustomers.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
+    "Grand Total: $($grandTotal.ToString('C2'))" | Out-File -FilePath $outputFilePath -Append
     "==========================================================" | Out-File -FilePath $outputFilePath -Append
     "`n" | Out-File -FilePath $outputFilePath -Append
     "$($outputTextBox.Text) Project Details" | Out-File -FilePath $outputFilePath -Append
@@ -478,6 +511,10 @@ $calculateButton.Add_Click({
 
     [System.Windows.Forms.MessageBox]::Show("Calculation complete. Output saved to: $outputFilePath", "Success")
 })
+
+
+
+
 
 
 
